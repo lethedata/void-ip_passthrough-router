@@ -1,0 +1,2 @@
+#!/bin/sh
+exec vlogger -t wpa_supplicant -p daemon

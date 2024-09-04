@@ -1,0 +1,11 @@
+#!/bin/sh
+exec 2>&1
+[ -r ../../variables ] && . ../../variables
+
+if [ -z "${WAN_INT}" ] || [ -z "${HostSRV_802dot1x_WPA_CONF}" ]; then
+	echo "Variables not set in config"
+	exit 1
+fi
+export OPENSSL_CONF=./openssl.cnf
+./logon_control &
+exec wpa_supplicant -M -c $HostSRV_802dot1x_WPA_CONF -i $WAN_INT -D wired -s

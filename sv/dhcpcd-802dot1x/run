@@ -1,0 +1,18 @@
+#!/bin/sh
+sv start wpa_supplicant || exit 1
+
+until wpa_cli status | grep Authorized ; do
+	TIMER=$((TIMER+1))
+        echo "Waiting for 802.1X Authorization ($TIMER)"
+        sleep $TIMER
+done
+
+exec 2>&1
+[ -r ../../variables ] && . ../../variables
+
+if [ -z "${WAN_INT}" ] ; then
+	echo "WAN_INT not set in variables file"
+	exit 1
+fi
+
+exec dhcpcd -B $WAN_INT --noipv4ll --noconfigure --script $(pwd)/run-hooks.sh 1>&2

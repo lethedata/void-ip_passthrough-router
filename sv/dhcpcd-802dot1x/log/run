@@ -1,0 +1,2 @@
+#!/bin/sh
+exec vlogger -t dhcpcd-802dot1x -p daemon

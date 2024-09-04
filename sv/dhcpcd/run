@@ -1,0 +1,10 @@
+#!/bin/sh
+exec 2>&1
+[ -r ../../variables ] && . ../../variables
+
+if [ -z "${WAN_INT}" ] ; then
+	echo "WAN_INT not set in variables file"
+	exit 1
+fi
+
+exec dhcpcd -B $WAN_INT --noipv4ll --noconfigure --script $(pwd)/run-hooks.sh 1>&2

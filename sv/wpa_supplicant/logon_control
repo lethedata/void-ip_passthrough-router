@@ -1,0 +1,14 @@
+#!/bin/sh
+until wpa_cli status > /dev/null 2>&1  ; do
+	:
+done
+sleep 1 # need short delay otherwise packet not sent
+wpa_cli logoff
+wpa_cli logon
+sleep 30 # wpa_supplicant attempts logon every 30 seconds
+
+until wpa_cli status | grep Authorized ; do
+	sleep 30
+done
+
+exec chpst -b 'Logon Control (Complete)' pause

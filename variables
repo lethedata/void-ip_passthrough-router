@@ -1,0 +1,68 @@
+# https://docs.voidlinux.org/config/network/index.html#interface-names
+###
+# Required Variables
+###
+WAN_INT=
+BRIDGE_NAME=br0
+BRIDGE_INT1=
+BRIDGE_INT2=
+LAN_IP=100.64.1.100
+LAN_NETWORK_NUM=100.64.1.96
+LAN_NETWORK_CIDR=29
+PORT_PIN_RANGE_LOW=32770
+PORT_PIN_RANGE_HIGH=33275
+PORT_RESERVE_COUNT=10
+
+# Autofilled with install scripts
+INSTALL_PATH=
+
+###
+# Host Services
+###
+HostSRV_DHCPWAN_ENABLED=1
+HostSRV_MACSPOOF_ENABLED=0
+WAN_MAC=GENERATE # GENERATE to attempt setting from HostSRV_802dot1x_WPA_CONF
+HostSRV_802dot1x_ENABLED=0
+HostSRV_802dot1x_WPA_CONF=/etc/wpa_supplicant/wpa_supplicant.conf
+HostSRV_SSHWAN_ENABLED=1
+HostSRV_SSH_PORTSRV=22
+HostSRV_SSH_PORTFWD=32772
+
+###
+# Optional Variables
+###
+# Empty or 32+
+NF_CONNTRACK_HASHSIZE=
+
+# 1 to boot into fallback mode
+FALLBACK_BOOT=0
+
+###
+# PORT_PIN Note
+###
+# PORT_PIN_RANGE_LOW & PORT_PIN_RANGE_HIGH is the port range to reserve for MASQ NATing.This range should be outside the downstream devices range to avoid port collisions. 
+# Default FreeBSD net.inet.ip.portrange: 49152-65535
+# Default Void Linux net.ipv4.ip_local_port_range: 32768-60999
+# PORT_RESERVE_COUNT is the number of ports from PORT_PIN_RANGE_LOW to reserve for WAN side router services
+
+###
+# Calculated Variables - Do NOT Edit
+###
+LAN_NETWORK="$LAN_NETWORK_NUM/$LAN_NETWORK_CIDR"
+PAT_RANGE_LOW=$((PORT_PIN_RANGE_LOW+PORT_RESERVE_COUNT))
+PAT_RANGE_HIGH=$PORT_PIN_RANGE_HIGH
+
+if [ "$HostSRV_802dot1x_ENABLED" = 1 ]; then
+	if [ -r "$HostSRV_802dot1x_WPA_CONF" ]; then
+		if [ "$WAN_MAC" = "GENERATE" ] ; then
+			WAN_MAC=$(awk --field-separator '["#]' '/identity=/ { print $2}' "$HostSRV_802dot1x_WPA_CONF")
+		fi
+	else
+		HostSRV_802dot1x_WPA_CONF=
+	fi
+fi
+
+case $WAN_MAC in
+	[0-9a-fA-F][0-9a-fA-F]:[0-9a-fA-F][0-9a-fA-F]:[0-9a-fA-F][0-9a-fA-F]:[0-9a-fA-F][0-9a-fA-F]:[0-9a-fA-F][0-9a-fA-F]:[0-9a-fA-F][0-9a-fA-F]);;
+	*) WAN_MAC=
+esac
