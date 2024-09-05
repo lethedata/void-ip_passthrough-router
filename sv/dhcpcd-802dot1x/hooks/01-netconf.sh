@@ -19,6 +19,8 @@ add_rules()
 	nft add rule ip PASSTHROUGH prerouting ip daddr "$new_ip_address" icmp type echo-request notrack return
 	nft add rule ip FILTER forward-ctinvalid ip daddr "$new_ip_address" ip protocol icmp accept
 	nft add rule ip NAT pnat meta oif "$WAN_INT" ip saddr "$LAN_NETWORK" ip protocol { tcp, udp, icmp } snat to "$new_ip_address" : "$PAT_RANGE_LOW"-"$PAT_RANGE_HIGH" fully-random
+	# ARP WAN Fix
+	arptables -t filter -R OUTPUT 1 -o "$WAN_INT" -j mangle --mangle-ip-s "$new_ip_address"
 	echo "Rules Added"
 }
 
@@ -35,6 +37,7 @@ flush_rules()
 	nft flush chain ip NAT pnat
 	nft flush chain ip PASSTHROUGH prerouting
 	nft flush chain ip FILTER forward-ctinvalid
+	arptables -t filter -R OUTPUT 1 -o "$WAN_INT" -j DROP
 	echo "Rules Flushed"
 }
 

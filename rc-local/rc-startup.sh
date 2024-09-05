@@ -181,6 +181,11 @@ load_kernel_modules(){
 	fi
 }
 
+load_arp_rules(){
+	# Prevent Leaking LAN IP out WAN. Replaced with dhcpcd-hook 01-netconf.sh
+	arptables -t filter -A OUTPUT -o "$WAN_INT" -j DROP
+}
+
 configure_interfaces(){
 	# Configure Interfaces
 	## WAN
@@ -237,5 +242,6 @@ enable_srv
 add_bridge
 validate_interface
 load_kernel_modules
+load_arp_rules
 configure_interfaces
 load_nftable_template
