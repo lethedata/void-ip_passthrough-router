@@ -41,7 +41,7 @@ for variable in $reqvars; do
 	fi
 done
 
-ip link add name "$BRIDGE_NAME" > /dev/null 2>&1
+ip link add name "$BRIDGE_NAME" type bridge > /dev/null 2>&1
 ip link show dev "$WAN_INT" > /dev/null 2>&1 || \
 	{ echo "ERROR: Bad Interface Name"; exit $ERR_VAR; }
 ip link show dev "$BRIDGE_INT1" > /dev/null 2>&1 || \
