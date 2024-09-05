@@ -1,8 +1,6 @@
 # IP Passthrough Router
 
-These scripts configure Void into a router with IP Passthrough (Half-Bridge).
-
-This is done via ARP Proxying for IP Passthrough, nftables port pinning for NAPT, and arptables for ARP request spoofing.
+These scripts configure Void into a router with IP Passthrough (Half-Bridge). This is done via ARP Proxying for IP Passthrough, nftables port pinning for NAPT, and arptables for ARP request spoofing.
 
 ## Requirements
 - OS: Void Linux (Preferably a fresh install)
@@ -11,9 +9,10 @@ This is done via ARP Proxying for IP Passthrough, nftables port pinning for NAPT
 - Recommended tools: tcpdump
 
 ## Usage
-1) Set variables under Required Variables in the `variables` file
-2) Run install.sh script as root
-3) Reboot
+1) Download and extract tar file in a directly such as `/opt/passthrough_router`
+2) Set variables under Required Variables in the `variables` file
+3) Run install.sh script as root
+4) Reboot
 
 ## Use Case
 
@@ -23,3 +22,9 @@ This was created as a way to "offload" 802.1x and DHCP from HA routers sharing a
 - Commands needed by configuration scripts: wpa_supplicant, arptables, dhcpcd, nftables, conntrack, awk, sshd, which
 - Artix Linux with runit might work but this is untested.
 - Additional dhcpcd-hooks can be added to `sv/dhcpcd/hooks` and `sv/dhcpcd/dhcpcd-802dot1x` folders respectively. Scripts could be created to re-configuring client device holding the passed IP.
+- extras folder contains commands to build nftable and arptable rules.
+- LAN Network is a small CG-NAT network to avoid reserving RFC1918 addresses.
+- If interface configuration fails during boot-up for some reason there is a fallback mode that makes the device available via ssh on 100.64.1.100:22 with password root access. 
+
+## To-Do
+- Increase fallback mode use across more boot stages.
