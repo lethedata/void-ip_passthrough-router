@@ -40,6 +40,13 @@ flush_rules()
 
 if [ "$interface" = "$WAN_INT" ]; then
         if $if_up; then
+		echo "New Address: $new_ip_address"
+		echo "Old Address: $old_ip_address"
+		# Kill script if dhcpcd launches it without getting an IP Address
+		if ! expr "$new_ip_address" : '[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*$' >/dev/null; then
+			echo "ERROR: Bad new_ip_address from dhcpcd"
+			exit
+		fi
         	if [ "$new_ip_address" != "${old_ip_address:-0.0.0.0}" ]; then
                 	flush_routes
                 	flush_rules
