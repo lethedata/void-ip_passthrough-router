@@ -3,7 +3,7 @@ BACK_NUM=1
 ERR_COMMAND=1030
 ERR_VAR=1035
 
-reqcmds="wpa_supplicant dhcpcd nft conntrack awk sshd which"
+reqcmds="wpa_supplicant dhcpcd nft arptables conntrack awk sshd which"
 reqvars="WAN_INT BRIDGE_NAME BRIDGE_INT1 BRIDGE_INT2 LAN_IP LAN_NETWORK_NUM LAN_NETWORK_CIDR PORT_PIN_RANGE_LOW PORT_PIN_RANGE_HIGH PORT_RESERVE_COUNT"
 
 echo "Validating configuration..."
