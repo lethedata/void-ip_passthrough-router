@@ -26,10 +26,10 @@ error_fallback(){
 	for i in /sys/class/net/*; do
 		int="${i#*/sys/class/net/}"
 		if ! [ "$int" = "lo" ] && ! [ "$int" = "br-fallback" ]; then
-			ip link set "$int" down || error_fallback_enter
-			ip addr flush "$int" || error_fallback_enter
-			ip link set "$int" master br-fallback 2>/dev/null || error_fallback_enter
-			ip link set "$int" up || error_fallback_enter
+			ip link set "$int" down 2>/dev/null
+			ip addr flush "$int" 2>/dev/null
+			ip link set "$int" master br-fallback 2>/dev/null
+			ip link set "$int" up 2>/dev/null
 		fi
 	done
 	ip link set br-fallback up || error_fallback_enter
