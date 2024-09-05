@@ -10,9 +10,10 @@ These scripts configure Void into a router with IP Passthrough (Half-Bridge). Th
 
 ## Usage
 1) Download and extract tar file in a directly such as `/opt/passthrough_router`
-2) Set variables under Required Variables in the `variables` file
-3) Run install.sh script as root
-4) Reboot
+2) Manually configure nameservers in `resolv.conf`
+3) Set variables under Required Variables in the `variables` file
+4) Run install.sh script as root
+5) Reboot
 
 ## Use Case
 
@@ -21,7 +22,7 @@ This was created as a way to "offload" 802.1x and DHCP from HA routers sharing a
 ## Extra Notes
 - Commands needed by configuration scripts: wpa_supplicant, arptables, dhcpcd, nftables, conntrack, awk, sshd, whereis
 - Artix Linux with runit might work but this is untested.
-- Additional dhcpcd-hooks can be added to `sv/dhcpcd/hooks` and `sv/dhcpcd/dhcpcd-802dot1x` folders respectively. Scripts could be created to re-configuring client device holding the passed IP.
+- Additional dhcpcd-hooks can be added to `sv/dhcpcd/hooks` and `sv/dhcpcd/dhcpcd-802dot1x` folders respectively. Scripts could be created to re-configuring client device holding the passed IP or automatically populate `resolv.conf` (see [20-resolv.conf](https://raw.githubusercontent.com/NetworkConfiguration/dhcpcd/master/hooks/20-resolv.conf))
 - extras folder contains commands to build nftable and arptable rules.
 - LAN Network is a small CG-NAT network to avoid reserving RFC1918 addresses.
 - If interface configuration fails during boot-up for some reason there is a fallback mode that makes the device available via ssh on 100.64.1.100:22 with password root access. 
