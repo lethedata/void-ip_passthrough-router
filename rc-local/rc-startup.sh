@@ -34,7 +34,7 @@ error_fallback(){
 	done
 	ip link set br-fallback up || error_fallback_enter
 	echo "Starting sshd with root password login available..."
-	cmdsshd=$(which sshd)
+	cmdsshd=$(whereis -b sshd | awk '{ print $2 }')
 	$cmdsshd -p 22 -o PermitRootLogin=yes || error_fallback_enter
 	echo "**Fallback Mode**"
 	echo "IP Addr: 100.64.1.100/24"
